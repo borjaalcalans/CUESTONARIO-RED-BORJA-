@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cuestionario de Redes</title>
+    <style>
+      :root {
+        --bg-1: #120606;
+        --bg-2: #220909;
+        --panel: rgba(31, 7, 7, 0.96);
+        --panel-strong: rgba(42, 9, 9, 0.98);
+        --primary: #ff2b2b;
+        --primary-2: #ff5c5c;
+        --accent: #ff8b8b;
+        --success: #ff5b5b;
+        --danger: #ff3b3b;
+        --warning: #ff8a80;
+        --text: #fff5f5;
+        --muted: #f7c9c9;
+        --border: rgba(255, 112, 112, 0.38);
+        --shadow: 0 20px 45px rgba(255, 32, 32, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: radial-gradient(circle at top, rgba(255, 70, 70, 0.18), transparent 30%),
+                    linear-gradient(135deg, var(--bg-1), var(--bg-2));
+        color: var(--text);
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 30px 16px;
+      }
+
+      .app {
+        width: min(100%, 980px);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding: 18px 20px;
+        background: rgba(28, 6, 6, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .showcase {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .showcase-copy,
+      .showcase-visual {
+        background: rgba(24, 6, 6, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .showcase-copy {
+        padding: 26px 26px 22px;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255, 70, 70, 0.08);
+        border: 1px solid rgba(255, 120, 120, 0.2);
+        color: #ffdede;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .showcase-copy h1 {
+        margin: 18px 0 12px;
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1.12;
+      }
+
+      .showcase-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 60ch;
+      }
+
+      .showcase-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        overflow: hidden;
+      }
+
+      .illustration-svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .brand-badge {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        font-size: 1.5rem;
+        box-shadow: 0 12px 30px rgba(255, 60, 60, 0.4);
+        animation: pulse 2.5s ease-in-out infinite;
+      }
+
+      .author {
+        font-size: 0.88rem;
+        color: var(--muted);
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(32, 8, 8, 0.98), rgba(16, 4, 4, 0.96));
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -30% auto auto -15%;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(255, 74, 74, 0.28), transparent 60%);
+      }
+
+      .card-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .top-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 82, 82, 0.08);
+        border: 1px solid rgba(255, 120, 120, 0.22);
+        color: #ffd5d5;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        padding: 7px 12px;
+      }
+
+      .progress-wrap {
+        flex: 1;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #ff3b3b, #ff7c7c);
+        border-radius: inherit;
+        transition: width 0.35s ease;
+      }
+
+      .question-title {
+        font-size: clamp(1.5rem, 2vw, 2.3rem);
+        margin: 18px 0 10px;
+        line-height: 1.3;
+      }
+
+      .question-category {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 22px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .option-btn {
+        cursor: pointer;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--text);
+        border-radius: 18px;
+        padding: 16px 18px;
+        font-size: 1rem;
+        text-align: left;
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .option-btn:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 120, 120, 0.45);
+        box-shadow: 0 12px 25px rgba(255, 70, 70, 0.12);
+      }
+
+      .option-btn.selected {
+        background: linear-gradient(135deg, rgba(255, 62, 62, 0.2), rgba(255, 169, 169, 0.1));
+        border-color: rgba(255, 110, 110, 0.9);
+      }
+
+      .option-btn.correct {
+        background: rgba(255, 95, 95, 0.12);
+        border-color: rgba(255, 120, 120, 0.8);
+      }
+
+      .option-btn.incorrect {
+        background: rgba(255, 66, 66, 0.12);
+        border-color: rgba(255, 90, 90, 0.8);
+      }
+
+      .controls {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 24px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 14px;
+        padding: 14px 20px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #ff2c2c, #ff7b7b);
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(255, 75, 75, 0.3);
+      }
+
+      .btn-secondary {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--text);
+      }
+
+      .result-box {
+        display: none;
+        animation: fadeIn 0.45s ease;
+      }
+
+      .result-box.visible {
+        display: block;
+      }
+
+      .score-ring {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        margin: 12px auto 22px;
+        background: radial-gradient(circle, rgba(255, 80, 80, 0.18), rgba(255, 80, 80, 0.04) 58%, transparent 60%);
+        border: 10px solid rgba(255, 110, 110, 0.14);
+        box-shadow: inset 0 0 35px rgba(255, 90, 90, 0.12);
+      }
+
+      .score-ring strong {
+        font-size: 2.3rem;
+        color: var(--primary-2);
+      }
+
+      .result-summary {
+        text-align: center;
+        margin-bottom: 22px;
+      }
+
+      .result-summary h2 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 3vw, 2.7rem);
+      }
+
+      .result-summary p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .answers-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 16px;
+      }
+
+      .answers-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 16px;
+        padding: 16px 18px;
+      }
+
+      .answers-item.correct {
+        border-color: rgba(255, 120, 120, 0.7);
+      }
+
+      .answers-item.incorrect {
+        border-color: rgba(255, 90, 90, 0.7);
+      }
+
+      .answers-item strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 1.02rem;
+      }
+
+      .answers-item p {
+        margin: 4px 0;
+        color: var(--muted);
+      }
+
+      .answers-item .ok {
+        color: #ffb0b0;
+      }
+
+      .answers-item .bad {
+        color: #ff7a7a;
+      }
+
+      .footer-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
+      }
+
+      .mini-visuals {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 18px 0 24px;
+      }
+
+      .feature-card {
+        padding: 18px;
+        text-align: center;
+        background: rgba(28, 7, 7, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 14px 28px rgba(255, 50, 50, 0.12);
+      }
+
+      .feature-icon {
+        margin-bottom: 8px;
+        font-size: 2rem;
+      }
+
+      .feature-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .feature-card span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      button:focus-visible {
+        outline: 3px solid #ffd0d0;
+        outline-offset: 3px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+      }
+
+      @media (max-width: 760px) {
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .showcase {
+          grid-template-columns: 1fr;
+        }
+
+        .top-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .progress-wrap {
+          width: 100%;
+        }
+
+        .options {
+          grid-template-columns: 1fr;
+        }
+
+        .mini-visuals {
+          grid-template-columns: 1fr;
+        }
+
+        .card {
+          padding: 22px 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <div class="brand">
+          <div class="brand-badge">🌐</div>
+          <span>Cuestionario de Redes</span>
+        </div>
+        <div class="author">Autor: Borja</div>
+      </header>
+
+      <section class="showcase">
+        <div class="showcase-copy">
+          <span class="eyebrow">Network Lab</span>
+          <h1>Domina la infraestructura de redes</h1>
+          <p>Evalúa tus conocimientos sobre redes, fibra óptica, RJ45, UTP, T568A/T568B, conectores SC y LC y herramientas esenciales del sector.</p>
+        </div>
+        <div class="showcase-visual" aria-label="Ilustración de red">
+          <svg class="illustration-svg" viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de red con servidores, routers y cableado">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#ff3838"/>
+                <stop offset="100%" stop-color="#ff9a9a"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="0" x2="1">
+                <stop offset="0%" stop-color="#ffd0d0"/>
+                <stop offset="100%" stop-color="#ff6464"/>
+              </linearGradient>
+            </defs>
+
+            <rect x="20" y="18" width="380" height="244" rx="26" fill="#1d0707" stroke="rgba(255,120,120,0.55)"/>
+
+            <g opacity="0.9">
+              <path d="M80 80 L170 120 L250 82 L340 126" stroke="url(#g1)" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <path d="M170 120 L170 190 L250 190 L250 82" stroke="url(#g2)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M80 80 L80 190 L170 190" stroke="url(#g1)" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M250 190 L340 126 L340 208" stroke="url(#g2)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <g>
+              <rect x="58" y="60" width="50" height="48" rx="12" fill="#2b0d0d" stroke="#ff6565"/>
+              <rect x="142" y="100" width="56" height="54" rx="12" fill="#2b0d0d" stroke="#ff9999"/>
+              <rect x="230" y="64" width="58" height="52" rx="12" fill="#2b0d0d" stroke="#ff6565"/>
+              <rect x="310" y="108" width="54" height="52" rx="12" fill="#2b0d0d" stroke="#ff9999"/>
+              <rect x="144" y="176" width="116" height="52" rx="14" fill="#2b0d0d" stroke="#ffb0b0"/>
+            </g>
+
+            <g fill="#fff3f3">
+              <circle cx="80" cy="80" r="8" fill="#ff5c5c"/>
+              <circle cx="170" cy="120" r="9" fill="#ff9d9d"/>
+              <circle cx="250" cy="82" r="8" fill="#ff5c5c"/>
+              <circle cx="340" cy="126" r="9" fill="#ffc4c4"/>
+              <circle cx="80" cy="190" r="8" fill="#ff6767"/>
+              <circle cx="170" cy="190" r="8" fill="#ff9e9e"/>
+              <circle cx="250" cy="190" r="8" fill="#ff5a5a"/>
+              <circle cx="340" cy="208" r="8" fill="#ffd0d0"/>
+            </g>
+
+            <g fill="#ffdede" font-size="12" font-family="Arial, sans-serif" font-weight="700">
+              <text x="70" y="109">PC</text>
+              <text x="154" y="138">SW</text>
+              <text x="236" y="98">RT</text>
+              <text x="318" y="142">R1</text>
+              <text x="176" y="207">Server</text>
+            </g>
+
+            <g stroke="#ff8a8a" stroke-width="3" opacity="0.8">
+              <path d="M58 220 C120 202, 150 210, 210 214" fill="none" stroke-linecap="round"/>
+              <path d="M208 214 C260 220, 292 220, 350 214" fill="none" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="mini-visuals" aria-label="Temas del cuestionario">
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🔌</div>
+          <strong>RJ45</strong>
+          <span>Cableado Ethernet</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">📡</div>
+          <strong>Fibra</strong>
+          <span>Transmisión óptica</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🧪</div>
+          <strong>Herramientas</strong>
+          <span>Diagnóstico y pruebas</span>
+        </div>
+      </section>
+
+      <section class="card" aria-live="polite">
+        <div class="card-inner">
+          <div id="quizScreen">
+            <div class="top-meta">
+              <span class="tag">📡 Red y cableado</span>
+              <div class="progress-wrap" role="progressbar" aria-label="Progreso del cuestionario" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+
+            <div id="questionContent"></div>
+          </div>
+
+          <div id="resultBox" class="result-box">
+            <div class="score-ring"><strong id="scoreValue">0/10</strong></div>
+            <div class="result-summary">
+              <h2 id="resultTitle">Resultado final</h2>
+              <p id="resultMessage"></p>
+            </div>
+            <ul id="answersList" class="answers-list"></ul>
+            <div class="footer-actions">
+              <button class="btn btn-primary" id="restartBtn">🔁 Volver a jugar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const questionsBank = [
+        { category: 'Redes informáticas', question: '¿Qué protocolo se usa para asignar direcciones IP automáticamente a los dispositivos de una red?', options: ['DNS', 'DHCP', 'SMTP', 'HTTP'], correct: 1 },
+        { category: 'Redes informáticas', question: '¿Qué significa LAN en redes?', options: ['Local Area Network', 'Long Area Network', 'Link Access Network', 'Large Access Node'], correct: 0 },
+        { category: 'Redes informáticas', question: '¿Qué capa del modelo OSI se encarga del direccionamiento IP y el encaminamiento?', options: ['Capa 2 - Enlace', 'Capa 3 - Red', 'Capa 4 - Transporte', 'Capa 7 - Aplicación'], correct: 1 },
+        { category: 'Redes informáticas', question: '¿Qué dispositivo se encarga de interconectar distintas redes y enrutar tráfico entre ellas?', options: ['Switch', 'Router', 'Hub', 'Repeater'], correct: 1 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa VPN?', options: ['Virtual Public Network', 'Very Private Network', 'Virtual Private Network', 'Video Protocol Node'], correct: 2 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa DNS?', options: ['Data Name Service', 'Domain Name System', 'Digital Network Security', 'Distributed Network Server'], correct: 1 },
+        { category: 'Acrónimos de redes', question: '¿Qué es un SSID?', options: ['Identificador del nombre de la red Wi‑Fi', 'Puerto de acceso físico', 'Tipo de cable de cobre', 'Dirección MAC del router'], correct: 0 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa MAC en redes?', options: ['Media Access Control', 'Maximum Access Carrier', 'Multi Access Connection', 'Main Address Channel'], correct: 0 },
+        { category: 'Herramientas de red', question: '¿Qué herramienta se usa para comprobar la conectividad entre dos dispositivos?', options: ['ping', 'ipconfig', 'tracert', 'nslookup'], correct: 0 },
+        { category: 'Cableado UTP', question: '¿Qué tipo de cable es el más habitual en redes Ethernet domésticas y empresariales?', options: ['UTP', 'Coaxial', 'Fibra óptica', 'USB'], correct: 0 },
+        { category: 'RJ45', question: '¿Qué conector se utiliza normalmente en redes Ethernet de cobre?', options: ['RJ11', 'BNC', 'RJ45', 'SC'], correct: 2 },
+        { category: 'T568A y T568B', question: 'En el pin 1 de un conector cableado según T568B, ¿qué hilo se coloca?', options: ['Blanco/verde', 'Blanco/naranja', 'Azul', 'Marrón'], correct: 1 },
+        { category: 'T568A y T568B', question: '¿Qué diferencia principal hay entre T568A y T568B?', options: ['El orden de los pares de colores en los pines', 'La velocidad máxima', 'El tipo de fibra', 'La longitud del cable'], correct: 0 },
+        { category: 'Herramientas de red', question: '¿Qué herramienta permite capturar y analizar paquetes de red?', options: ['Wireshark', 'Laser pointer', 'Telnet', 'NAT'], correct: 0 },
+        { category: 'Herramientas de red', question: '¿Qué dispositivo o herramienta se usa para comprobar continuidad y cortocircuitos en un cable UTP?', options: ['Cable tester', 'Router', 'Switch', 'Patch panel'], correct: 0 },
+        { category: 'Fibra óptica', question: '¿Qué medio transmite datos mediante luz en un núcleo de vidrio o plástico?', options: ['Cable UTP', 'Fibra óptica', 'Cable coaxial', 'Cable USB'], correct: 1 },
+        { category: 'Fibra óptica', question: '¿Qué tipo de fibra óptica se suele utilizar para distancias largas y con un haz de luz único?', options: ['Multimodo', 'Monomodo', 'Bimodo', 'Hexamodo'], correct: 1 },
+        { category: 'Conectores SC y LC', question: '¿Qué conector de fibra óptica suele tener forma rectangular y se suele identificar como SC?', options: ['Conector totalmente circular', 'Conector de tipo push-pull y forma rectangular', 'Conector RJ45', 'Conector de USB-C'], correct: 1 },
+        { category: 'Conectores SC y LC', question: '¿Qué conector de fibra óptica es más pequeño y suele ser de forma cuadrada/romboidal?', options: ['SC', 'LC', 'RJ45', 'BNC'], correct: 1 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa AP en redes Wi‑Fi?', options: ['Access Point', 'Automatic Proxy', 'Application Protocol', 'Advanced Patch'], correct: 0 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa NAT?', options: ['Network Address Translation', 'Network Access Token', 'Native Address Topology', 'New Address Transfer'], correct: 0 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa VLAN?', options: ['Virtual Local Area Network', 'Very Large Area Network', 'Voice LAN Access Node', 'Virtual Line Access Network'], correct: 0 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa QoS?', options: ['Quality of Service', 'Query of Signal', 'Quick Output System', 'Quality of Signal'], correct: 0 },
+        { category: 'Acrónimos de redes', question: '¿Qué significa PoE?', options: ['Power over Ethernet', 'Protocol over Ethernet', 'Port of Ethernet', 'Packet over Exchange'], correct: 0 },
+        { category: 'Redes informáticas', question: '¿Qué estándar internacional define Ethernet y sus variantes?', options: ['IEEE 802.3', 'ISO 9001', 'TCP/IP', 'IEEE 802.11'], correct: 0 },
+        { category: 'Cableado UTP', question: '¿Qué significa UTP en el contexto del cableado de red?', options: ['Unshielded Twisted Pair', 'Universal Transfer Port', 'United Transfer Protocol', 'Ultra Twisted Pair'], correct: 0 },
+        { category: 'RJ45', question: '¿Cuántos hilos tiene un cable Ethernet estándar RJ45?', options: ['2', '4', '8', '12'], correct: 2 },
+        { category: 'T568A y T568B', question: '¿En qué norma T568A el primer par de colores es?', options: ['Blanco/naranja y naranja', 'Blanco/verde y verde', 'Blanco/café y café', 'Azul claro y azul oscuro'], correct: 1 },
+        { category: 'Herramientas de red', question: '¿Qué herramienta se utiliza para crimpado y terminación del cable RJ45?', options: ['Crimpadora', 'Lupa', 'Sierra', 'Multímetro'], correct: 0 },
+        { category: 'Conectores SC y LC', question: '¿Qué conector de fibra se usa muy a menudo en equipos y SFP por su tamaño compacto?', options: ['LC', 'BNC', 'RJ45', 'XLR'], correct: 0 },
+      ];
+
+      let selectedQuestions = [];
+      let currentIndex = 0;
+      let answers = [];
+
+      const questionContent = document.getElementById('questionContent');
+      const progressBar = document.getElementById('progressBar');
+      const resultBox = document.getElementById('resultBox');
+      const quizScreen = document.getElementById('quizScreen');
+      const answersList = document.getElementById('answersList');
+      const scoreValue = document.getElementById('scoreValue');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultMessage = document.getElementById('resultMessage');
+      const restartBtn = document.getElementById('restartBtn');
+
+      function shuffleArray(array) {
+        const copy = [...array];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function startQuiz() {
+        const shuffled = shuffleArray(questionsBank);
+        selectedQuestions = shuffled.slice(0, 10);
+        currentIndex = 0;
+        answers = Array(selectedQuestions.length).fill(null);
+
+        quizScreen.classList.remove('hidden');
+        resultBox.classList.remove('visible');
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        if (currentIndex >= selectedQuestions.length) {
+          showResults();
+          return;
+        }
+
+        const currentQuestion = selectedQuestions[currentIndex];
+        const progress = ((currentIndex) / selectedQuestions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressBar.parentElement.setAttribute('aria-valuenow', String(currentIndex));
+
+        questionContent.innerHTML = `
+          <div class="question-meta">
+            <div class="question-category">${currentQuestion.category}</div>
+            <h1 class="question-title">${currentIndex + 1}. ${currentQuestion.question}</h1>
+          </div>
+          <div class="options">
+            ${currentQuestion.options.map((option, index) => {
+              const selected = answers[currentIndex] === index;
+              return `
+                <button class="option-btn ${selected ? 'selected' : ''}" data-index="${index}" type="button" aria-pressed="${selected}">
+                  ${String.fromCharCode(65 + index)}. ${option}
+                </button>
+              `;
+            }).join('')}
+          </div>
+          <div class="controls">
+            <button class="btn btn-primary" id="nextBtn" type="button" ${answers[currentIndex] === null ? 'disabled' : ''}>
+              ${currentIndex === selectedQuestions.length - 1 ? 'Finalizar' : 'Siguiente'}
+            </button>
+          </div>
+        `;
+
+        document.querySelectorAll('.option-btn').forEach((button) => {
+          button.addEventListener('click', () => {
+            const index = Number(button.dataset.index);
+            answers[currentIndex] = index;
+            renderQuestion();
+          });
+        });
+
+        const nextButton = document.getElementById('nextBtn');
+        nextButton.addEventListener('click', () => {
+          if (answers[currentIndex] !== null) {
+            currentIndex += 1;
+            renderQuestion();
+          }
+        });
+      }
+
+      function showResults() {
+        quizScreen.classList.add('hidden');
+        resultBox.classList.add('visible');
+
+        let correctCount = 0;
+
+        answersList.innerHTML = selectedQuestions.map((question, index) => {
+          const userAnswer = answers[index];
+          const isCorrect = userAnswer === question.correct;
+          if (isCorrect) correctCount += 1;
+
+          return `
+            <li class="answers-item ${isCorrect ? 'correct' : 'incorrect'}">
+              <strong>${index + 1}. ${question.question}</strong>
+              <p class="${isCorrect ? 'ok' : 'bad'}">Tu respuesta: ${userAnswer !== null ? question.options[userAnswer] : 'Sin responder'}</p>
+              <p>Respuesta correcta: ${question.options[question.correct]}</p>
+            </li>
+          `;
+        }).join('');
+
+        const percentage = Math.round((correctCount / selectedQuestions.length) * 100);
+        scoreValue.textContent = `${correctCount}/${selectedQuestions.length}`;
+        resultTitle.textContent = percentage >= 70 ? '¡Muy bien!' : percentage >= 50 ? 'Buen trabajo' : 'Sigue practicando';
+        resultMessage.textContent = `Has acertado ${correctCount} de ${selectedQuestions.length} preguntas (${percentage}%).`;
+
+        progressBar.style.width = '100%';
+        progressBar.parentElement.setAttribute('aria-valuenow', String(selectedQuestions.length));
+      }
+
+      restartBtn.addEventListener('click', startQuiz);
+
+      startQuiz();
+    </script>
+  </body>
+</html>
